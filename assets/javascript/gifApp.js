@@ -15,7 +15,7 @@
 $(document).ready(function() {
     
     //array of gifs
-    topics = ["fantasia", "centaurs", "mickey mouse", "orchestra", "wizard", "broom"]
+    var topics = ["fantasia", "centaurs", "mickey mouse", "orchestra", "wizard", "broom"]
     
     //search the DOM for buttons
     var main = $("body");
@@ -30,24 +30,25 @@ $(document).ready(function() {
             gifButton.val(topics[i]);
             buttons.append(gifButton);
         }
-    }  
+    }
 
     //Display intial buttons     
     makeButtons();
 
-    //Add button from user"s input
-    $("#gifInput").change(function(){
-        userInput = $("#gifInput").val();
-        $(this).val("");                           //clear form
-        topics.push(userInput);                    //push user input to array
-        $("#buttons").empty()                      //clear buttons div
-        makeButtons();                             // re-display array as buttons but now with new button
+    //Add button from user's input
+    $("#find-gif").on("click",function(event) {
+        event.preventDefault();
+        var userInput = $("#gifInput").val();
+        topics.push(userInput);
+        $("#gifInput").val("")                     
+        $("#buttons").empty();   
+        makeButtons();                                                                             
     });
     
     
     //Binding on-clicks to the buttons and displaying the gifs in the div.
-    $("button").click(function () {
-        
+    
+    $("#buttons").on("click", ".gif-button", function() { 
       // Putting the value of the button in a variable
       var tasia = $(this).attr("value");
         console.log(tasia);
@@ -78,34 +79,39 @@ $(document).ready(function() {
 
             // Creating and storing an image tag
             var tasiaImage = $("<img>");
-            // Setting the src attribute of the image to a property pulled off the result item
-            tasiaImage.attr("src", results[i].images.fixed_height.url);
 
-            // Appending the paragraph and image tag to the animalDiv
+            // Setting the src attribute of the image to a property pulled off the result item 
+            // Storing still and animate attributes and classes so we can pause it.
+            tasiaImage.attr("src", results[i].images.fixed_height_still.url);
+            tasiaImage.attr("data-state", "still");
+            tasiaImage.attr("data-still", results[i].images.fixed_height_still.url);
+            tasiaImage.attr("data-animate", results[i].images.fixed_height.url);
+            tasiaImage.attr("class", "gif");
+
+            // Appending the paragraph and image tag to the div
             tasiaDiv.append(p);
             tasiaDiv.append(tasiaImage);
 
-            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
+            // Prependng the tasiaDiv to the HTML page in the "#gifDisplay" div
             $("#gifDisplay").prepend(tasiaDiv);
           }
         });
     }); 
 
-    //Pausing Gif solution
-    $("img").click(function() {
-        console.log("yaya");
+    //Pausing and starting gif
+    $("#gifDisplay").on("click", ".gif", function() {
         // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
-        // var state = $(this).attr("data-state");
-        // // If the clicked image"s state is still, update its src attribute to what its data-animate value is.
-        // // Then, set the image"s data-state to animate
-        // // Else set src to the data-still value
-        // if (state === "still") {
-        //   $(this).attr("src", $(this).attr("data-animate"));
-        //   $(this).attr("data-state", "animate");
-        // } else {
-        //   $(this).attr("src", $(this).attr("data-still"));
-        //   $(this).attr("data-state", "still");
-        // }
+        var state = $(this).attr("data-state");
+        // If the clicked image"s state is still, update its src attribute to what its data-animate value is.
+        // Then, set the image"s data-state to animate
+        // Else set src to the data-still value
+        if (state === "still") {
+          $(this).attr("src", $(this).attr("data-animate"));
+          $(this).attr("data-state", "animate");
+        } else {
+          $(this).attr("src", $(this).attr("data-still"));
+          $(this).attr("data-state", "still");
+        }
       });
         
 });
