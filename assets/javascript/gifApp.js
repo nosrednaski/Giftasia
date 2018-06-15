@@ -17,9 +17,7 @@ $(document).ready(function() {
     //array of gifs
     var topics = ["fantasia", "centaurs", "mickey mouse", "orchestra", "wizard", "broom"]
     
-    //search the DOM for buttons
-    var main = $("body");
-    var buttons = main.find("#buttons");
+    var buttons = $("#buttons");
     
     //Loop for producing buttons out of the array.
     function makeButtons() {
